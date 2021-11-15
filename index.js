@@ -2,7 +2,7 @@ const admin = require("firebase-admin");
 const http = require("http");
 const fieldValue = admin.firestore.FieldValue;
 
-var serviceAccount = require("./keys/cararra-ctf-firebase-adminsdk-o68dw-cb950d3896.json");
+var serviceAccount = require("./keys/quick-filament-262202-9dbe3017918d.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -27,7 +27,7 @@ function success(uid, submission, s) {
       solvedChallenges: fieldValue.arrayUnion({ name: s.problem, timestamp: admin.firestore.Timestamp.now()})
     });
   } else {
-    db.collection("globals/data/challenges").doc(s.problem).get().then((challengeDoc) => {
+    db.collection("/challenges").doc(s.problem).get().then((challengeDoc) => {
       let data = challengeDoc.data();
       challenges[s.problem] = data;
       db.collection("leaderboard").doc(uid).update({
@@ -108,7 +108,7 @@ db.collection("globals/data/challenges").onSnapshot(querySnapshot => {
   querySnapshot.docs.forEach(doc => {
     maxScore += doc.data().points;
   });
-  db.collection("globals").doc("data").set({
+  db.collection("challenges").doc("data").set({
     maxScore: maxScore
   });
 });
